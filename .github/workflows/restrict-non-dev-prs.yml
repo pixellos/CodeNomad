@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   restrict-non-dev-prs:
-    if: ${{ github.event.pull_request.base.ref != 'dev' }}
+    if: ${{ github.event.pull_request.base.ref != 'dev' && !startsWith(github.event.pull_request.base.ref, 'release/') }}
     runs-on: ubuntu-latest
     env:
       ALLOWED_ACTORS: ${{ vars.ALLOWED_NON_DEV_PR_ACTORS }}

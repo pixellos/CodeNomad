@@ -383,7 +383,6 @@ export default function MessageItem(props: MessageItemProps) {
   return (
     <div
       class={containerClass()}
-      style={{ "content-visibility": "auto" }}
       data-view="message-item"
       data-instance-id={props.instanceId}
       data-session-id={props.sessionId}

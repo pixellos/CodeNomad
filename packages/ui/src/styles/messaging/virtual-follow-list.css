@@ -1,5 +1,16 @@
+.virtual-follow-list-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  width: 100%;
+}
+
 .message-stream {
-  @apply flex-1 min-h-0 overflow-y-auto flex flex-col gap-0.5;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   background-color: var(--surface-base);
   color: inherit;
 
@@ -13,21 +24,63 @@
 
   /* Prevent browser scroll anchoring fighting our virtualization compensation. */
   overflow-anchor: none;
+  
+  /* Scrollbar styling */
+  scrollbar-gutter: stable;
 }
 
-.message-stream-block {
+.virtual-follow-list-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  /* Ensure it doesn't affect layout at all */
+  height: 0;
+  overflow: visible;
+}
+
+.virtual-follow-list-overlay > * {
+  pointer-events: auto;
+}
+
+.virtual-follow-list-controls-container {
+  position: absolute;
+  bottom: calc(var(--space-md) + env(safe-area-inset-bottom, 0px));
+  right: var(--space-md);
+  z-index: 20;
+}
+
+.virtual-follow-list-controls {
   display: flex;
   flex-direction: column;
-  gap: 0.0625rem;
-
-  contain: layout paint style;
+  gap: var(--space-sm);
 }
 
-.virtual-item-wrapper {
-  width: 100%;
+.virtual-follow-list-control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--border-base);
+  color: var(--text-primary);
+  box-shadow: var(--scroll-elevation-shadow);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.25rem;
 }
 
-.virtual-item-placeholder,
+.virtual-follow-list-control-btn:hover {
+  background-color: var(--surface-hover);
+  transform: translateY(-1px);
+}
+
+.virtual-follow-list-control-btn:active {
+  transform: translateY(0);
+}
+
 .message-stream-placeholder {
   display: block;
   width: 100%;
@@ -35,14 +88,3 @@
   background-color: transparent;
 }
 
-.virtual-item-content {
-  width: 100%;
-  position: relative;
-}
-
-.virtual-item-content-hidden {
-  position: absolute;
-  inset: 0;
-  visibility: hidden;
-  pointer-events: none;
-}

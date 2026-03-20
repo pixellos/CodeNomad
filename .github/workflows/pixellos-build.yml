@@ -2,6 +2,7 @@ name: Build Pixellos Dev
 
 on:
   push:
+    branches:
       - pixellos-dev
       - release/*
   workflow_dispatch:

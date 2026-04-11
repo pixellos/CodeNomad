@@ -269,6 +269,10 @@ function setupRenderer(isDark: boolean) {
  </div>
  `.trim()
 
+    if (resolvedLang === "mermaid") {
+      return `<div class="markdown-code-block" data-language="mermaid" data-code="${encodedCode}">${header}<div class="mermaid-block" data-code="${encodedCode}"><pre><code>${escapeHtml(decodedCode)}</code></pre></div></div>`
+    }
+
     if (highlightSuppressed) {
       return `<div class="markdown-code-block" data-language="${escapedLang}" data-code="${encodedCode}">${header}<pre><code class="language-${escapedLang}">${escapeHtml(decodedCode)}</code></pre></div>`
     }

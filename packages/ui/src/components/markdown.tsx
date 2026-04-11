@@ -190,6 +190,43 @@ export function Markdown(props: MarkdownProps) {
     })
   })
 
+  createEffect(() => {
+    const currentHtml = html()
+    if (!containerRef || !currentHtml.includes('class="mermaid-block"')) return
+
+    const renderMermaid = async () => {
+      try {
+        const { default: mermaid } = await import("mermaid")
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: resolved().themeKey === "dark" ? "dark" : "default",
+        })
+        const nodes = containerRef!.querySelectorAll(".mermaid-block:not([data-rendered])")
+        for (let i = 0; i < nodes.length; i++) {
+          const node = nodes[i] as HTMLElement
+          const code = decodeURIComponent(node.getAttribute("data-code") || "")
+          if (code) {
+            try {
+              // Create a unique deterministic ID
+              const id = `mermaid-${Math.random().toString(36).substring(2, 9)}`
+              const { svg } = await mermaid.render(id, code)
+              node.innerHTML = svg
+              node.setAttribute("data-rendered", "true")
+            } catch (err) {
+              log.error("Failed to render mermaid diagram", err)
+              // If it failed to render, mark it so we don't keep trying
+              node.setAttribute("data-rendered", "error")
+            }
+          }
+        }
+      } catch (err) {
+        log.error("Failed to load mermaid", err)
+      }
+    }
+
+    void renderMermaid()
+  })
+
   onMount(() => {
     const handleClick = async (event: Event) => {
       const target = event.target as HTMLElement
